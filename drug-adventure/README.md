@@ -31,6 +31,7 @@ TODO:
 ej. git checkout -b feature/combate
 - Al terminar alguna funcionalidad importante, y el juego corre sin errores, hacer commit y push a sus ramas.
 - Abrir un pull request hacia la rama principal del juego. Llenar esta plantilla de descripcion del PR para revisarlo mas rapido.
+IMPORTANTE: Asegurense de cambiar el 'base repository' a nuestro fork (el que tiene mi usuario al inicio) y a la rama base drug-aventure desde sus ramas. Debe verse asi antes de abrir el pull request: base: drug-adventure ← compare: nombre-de-rama-nueva
 
 Título del PR: [Breve descripción, ej. Agregados subjefes]
 Archivos modificados:

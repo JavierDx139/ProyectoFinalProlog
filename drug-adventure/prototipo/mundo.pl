@@ -1,10 +1,57 @@
 % Aqui manejamos las conexiones fisicas y la navegacion.
+% Lugares plaza.
 conectado(plaza, callejon).
 conectado(callejon, plaza).
 conectado(plaza, mercado).
 conectado(mercado, plaza).
 conectado(plaza, castillo).
+conectado(entrada_mansion, plaza).
+conectado(plaza,entrada_mansion).
 
+    
+% Lugares Mansion.
+conectado(entrada_mansion, lobby).
+conectado(lobby,entrada_mansion).
+conectado(lobby, recamara).
+conectado(recamara,lobby).
+conectado(lobby, cocina).
+conectado(cocina, lobby).    
+conectado(lobby, escaleras).
+conectado(escaleras,lobby).
+conectado(escaleras, sala).
+conectado(sala, escaleras).
+    
+% Lugares Barrio Mongrel.
+conectado(callejon, centro).
+conectado(centro, callejon_norte).
+conectado(callejon_norte, centro).
+conectado(callejon_norte, casa_desgastada).
+conectado(casa_desgastada, callejon_norte).
+conectado(centro, callejon_este).
+conectado(callejon_este, centro).
+conectado(callejon_oeste, centro).
+conectado(centro, callejon_oeste).
+conectado(callejon_oeste, distrito_verde).
+conectado(distrito_verde, callejon_oeste).
+conectado(distrito_verde, esquina_sospechosa).
+conectado(esquina_sospechosa, distrito_verde).
+conectado(casa_desgastada, sotano).
+conectado(sotano, casa_desgastada).
+conectado(sotano, fondo).
+conectado(fondo, sotano).
+
+% Lugares Cuadrante Neon.
+
+
+
+
+
+
+
+
+    
+    
+    
 ir(_) :- 
     estado_juego(menu),
     write('Escribe "iniciar." para comenzar el juego.'), nl, !.

@@ -32,7 +32,10 @@ catalogo :-
     estado_juego(tienda),
     write('--- CATALOGO ---'), nl,
     write(' - pocion (10 monedas)'), nl,
-    write(' - espada (30 monedas)'), nl, !.
+    write(' - espada (30 monedas)'), nl,
+    write(' - hierba (15 monedas)'), nl,
+    write(' - cocaso (50 monedas)'), nl,
+    write(' - joyas  (90 monedas)'), nl, !.
 catalogo :-
     write('No estas en una tienda.'), nl.
 

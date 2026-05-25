@@ -52,14 +52,8 @@ conectado(servidores, pista_baile).
 conectado(barra, pista_baile).
 conectado(pista_baile, barra).
 
-% Lugares castillo.
 
-
-
-
-
-    
-    
+       
     
 ir(_) :- 
     estado_juego(menu),
@@ -74,12 +68,56 @@ ir(_) :-
 ir(_) :-
     estado_juego(tienda),
     write('Estas viendo el catalogo del mercader. Usa "salir_tienda." antes de irte.'), nl, !.
+    
+ir(servidores) :-
+    ubicacion(Actual),
+    conectado(Actual, servidores),
+    inventario(Inv),
+    member(tarjeta_servidores, Inv),
+    puerta_cerrada(servidores),
+    retract(puerta_cerrada(servidores)),
+    retract(ubicacion(Actual)),
+    assert(ubicacion(servidores)),
+    retractall(ubicacion_anterior(_)),
+    assert(ubicacion_anterior(Actual)),
+    write('Te has movido a: servidores - Se ha usado la tarjeta_servidores'),  nl,
+    mirar,
+    revisar_victoria, !.
+    
+ir(servidores) :-
+    ubicacion(Actual),
+    conectado(Actual, servidores),
+    puerta_cerrada(servidores),
+    write('La puerta esta cerrada. Necesitas la tarjeta_servidores para entrar.'), nl, !.
+
+ir(castillo) :-
+    ubicacion(Actual),
+    conectado(Actual, castillo),
+    inventario(Inv),
+    member(fragmento_llave_1, Inv),
+    member(fragmento_llave_2, Inv),
+    member(fragmento_llave_3, Inv),
+    puerta_cerrada(castillo),
+    retract(puerta_cerrada(castillo)),
+    retract(ubicacion(Actual)),
+    assert(ubicacion(castillo)),
+    retractall(ubicacion_anterior(_)),
+    assert(ubicacion_anterior(Actual)),
+    write('Te has movido a: castillo - Se han usado los tres fragmentos de llave'), nl,
+    mirar,
+    revisar_victoria.
+
+ir(castillo) :-
+    ubicacion(Actual),
+    conectado(Actual, castillo),
+    puerta_cerrada(castillo),
+    write('La puerta del castillo esta fuertemente cerrada. Necesitas 3 fragmentos de llave para entrar.'), nl, !.
 
 ir(Lugar) :-
     ubicacion(Actual),
     conectado(Actual, Lugar),
     puerta_cerrada(Lugar),
-    write('La puerta esta cerrada. Necesitas una llave para entrar.'), nl, !.
+    write('La puerta de '), write(Lugar), write(' esta bloqueada. Necesitas un objeto especial para pasar.'), nl, !.
 
 % Movimiento exitoso
 ir(Lugar) :-

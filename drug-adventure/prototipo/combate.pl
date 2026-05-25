@@ -7,7 +7,8 @@ arma(espada, 70).
 arma(lanza, 85).
 arma(martillo, 55).
 arma(dobles_cuchillos, 75).
-
+arma(revolver_antiguo, 80).
+arma(tommygun, 65).
 % Incrementos de maximos por nivel
 bonos_por_nivel(0, 0) :- !.
 bonos_por_nivel(1, 8) :- !.

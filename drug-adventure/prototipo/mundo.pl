@@ -82,8 +82,14 @@ ir(servidores) :-
     assert(ubicacion_anterior(Actual)),
     write('Te has movido a: servidores - Se ha usado la tarjeta_servidores'),  nl,
     mirar,
-    revisar_victoria.
+    revisar_victoria, !.
     
+ir(servidores) :-
+    ubicacion(Actual),
+    conectado(Actual, servidores),
+    puerta_cerrada(servidores),
+    write('La puerta esta cerrada. Necesitas la tarjeta_servidores para entrar.'), nl, !.
+
 ir(castillo) :-
     ubicacion(Actual),
     conectado(Actual, castillo),
@@ -101,11 +107,17 @@ ir(castillo) :-
     mirar,
     revisar_victoria.
 
+ir(castillo) :-
+    ubicacion(Actual),
+    conectado(Actual, castillo),
+    puerta_cerrada(castillo),
+    write('La puerta del castillo esta fuertemente cerrada. Necesitas 3 fragmentos de llave para entrar.'), nl, !.
+
 ir(Lugar) :-
     ubicacion(Actual),
     conectado(Actual, Lugar),
     puerta_cerrada(Lugar),
-    write('La puerta esta cerrada. Necesitas 3 fragmentos de llave para entrar.'), nl, !.
+    write('La puerta de '), write(Lugar), write(' esta bloqueada. Necesitas un objeto especial para pasar.'), nl, !.
 
 % Movimiento exitoso
 ir(Lugar) :-

@@ -13,11 +13,27 @@ arma_equipada(ninguna).
 jugador(30, 30, 5).
 
 % enemigo(Nombre, Ubicacion, HP_Actual, HP_Total, Dmg, Recompensa)
-enemigo(ladron, callejon, 15, 15, 3, 20).
-
+enemigo(ladron, callejon, 5 ,  5, 2, 10).
+enemigo(guardia_puerta, entrada_mansion, 10, 10, 3, 10).
+enemigo(guardia_cocina, cocina, 10, 10, 3, 10).
+enemigo(capo_mayor,sala, 20, 20, 5, 30).
+enemigo(pandillero,casa_desgastada, 6, 6, 4, 5).
+enemigo(pandillero_entrada, sotano, 6, 6, 4, 5).
+enemigo(pandillero_fondo, fondo, 6, 6, 4, 5).
+enemigo(pandillero_viajado, distrito_verde, 6,6,3,3).
+enemigo(sicario_neon, pista_baile, 7,7,3,10).
+enemigo(hacker_neon, servidores, 15, 15, 4, 20).
+   
 % Objetos en el mapa
-objeto_en(plaza, llave).
 objeto_en(callejon, pocion).
-
+objeto_en(lobby, vino).
+objeto_en(recamara, revolver_antiguo).
+objeto_en(sala, fragmento_llave_1).
+objeto_en(esquina_sospechosa, lechuga).
+objeto_en(fondo, fragmento_llave_2).
+objeto_en(sala_dj, tarjeta_servidores).
+objeto_en(servidores, fragmento_llave_3).
+    
 % Puertas
 puerta_cerrada(castillo).
+puerta_cerrada(servidores).

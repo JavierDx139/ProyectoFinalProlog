@@ -154,7 +154,7 @@ equipar(_) :-
 % Eventos de robos y perdidas.
 robos :-
     inventario(Inv),
-    diinero(D),
+    dinero(D),
     ( (D =< 0, Inv == []) ->
         write(' - Evento Al Azar - '), nl,
         write('Un individuo llega por detras, ve que no tienes nada y se retira'), nl
@@ -169,12 +169,12 @@ robos :-
         ;
             write(' - Evento Al Azar - '), nl,
             write('Te salvaste de un robo, pero alguien te sigue,') , nl,
-            write('y logras perdert rapidamente entre la gente.'), nl   
+            write('y logras perderte rapidamente entre la gente.'), nl   
         )    
     ).
 
     % Casos de robos.
-    % Caso 1: Robo de dinero:
+    % Caso 1: Robo de dinero.
     ejecutar_robo(1) :-
         dinero(D),
         D > 0, !,
@@ -189,3 +189,22 @@ robos :-
     ejecutar_robo(1) :-
         ejecutar_robo(2).
         
+    % Caso 2: Robo de objetos.
+    ejecutar_robo(2) :-
+        inventario(Inv),
+        Inv \== [], !,
+
+        random_member(ObjetoRobado, Inv),
+
+        select(ObjetoRobado, Inv, NuevoInv),
+        retract(inventario(Inv)),
+        assert(inventario(NuevoInv)),
+
+        write('Te apuntan con un arma y revisan tu mochila y te roban tu: '),
+        write(ObjetoRobado), write('.'), nl,
+        write('Ya no esta disponible ese objeto en el inventario'), nl.
+
+    %Si no es posible 2 haz 1.
+
+    ejecutar_robo(2) :-
+        ejecutar_robo(1).

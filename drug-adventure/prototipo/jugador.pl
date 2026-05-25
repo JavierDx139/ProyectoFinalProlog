@@ -79,6 +79,9 @@ tirar(_) :-
 efecto_consumible(pocion, curar, 15).
 efecto_consumible(manzana, curar, 5).
 efecto_consumible(vino, curar, 10).
+efecto_consumible(hierba, curar, 20).
+efecto_consumible(cocaso, curar, 50).
+
     
 usar(Objeto) :-
     inventario(Inv),

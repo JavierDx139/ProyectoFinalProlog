@@ -28,12 +28,8 @@ enemigo(dj_sicario, sala_dj, 8,8,4,10).
 % Objetos en el mapa
 objeto_en(callejon, pocion).
 objeto_en(lobby, vino).
-objeto_en(recamara, revolver_antiguo).
-objeto_en(sala, fragmento_llave_1).
 objeto_en(esquina_sospechosa, lechuga).
-objeto_en(fondo, fragmento_llave_2).
 objeto_en(sala_dj, tarjeta_servidores).
-objeto_en(servidores, fragmento_llave_3).
 objeto_en(barra, pocion).
 
     

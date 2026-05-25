@@ -78,7 +78,11 @@ tirar(_) :-
 % efecto_consumible(NombreObjeto, TipoEfecto, Valor)
 efecto_consumible(pocion, curar, 15).
 efecto_consumible(manzana, curar, 5).
+efecto_consumible(vino, curar, 10).
+efecto_consumible(hierba, curar, 20).
+efecto_consumible(cocaso, curar, 50).
 
+    
 usar(Objeto) :-
     inventario(Inv),
     member(Objeto, Inv),
@@ -126,7 +130,11 @@ aplicar_efecto(curar, Valor) :-
 % dano_arma(Nombre, BonusDeDano)
 dano_arma(espada, 10).
 dano_arma(ninguna, 0).
-
+dano_arma(revolver_antiguo, 12).
+dano_arma(tommygun, 20).    
+dano_arma(lanza, 13).
+dano_arma(martillo, 18).
+dano_arma(dobles_cuchillos, 8).
 % Reglas para equipar un objeto.
 equipar(_) :-
     estado_juego(combate),

@@ -1,13 +1,20 @@
 % Sistema de combate simplificado.
 :- use_module(library(random)).
-
+% Objetos que sueltan los enemigos al morir
+drop_enemigo(capo_mayor, tommygun).
+drop_enemigo(capo_mayor, fragmento_llave_1).
+drop_enemigo(guardia_puerta, revolver_antiguo).
+drop_enemigo(pandillero_fondo, fragmento_llave_2).
+drop_enemigo(hacker_neon, fragmento_llave_3).
+    
 % Armas y sus probabilidades de golpe
 arma(ninguna, 95).
 arma(espada, 70).
 arma(lanza, 85).
 arma(martillo, 55).
 arma(dobles_cuchillos, 75).
-
+arma(revolver_antiguo, 80).
+arma(tommygun, 65).
 % Incrementos de maximos por nivel
 bonos_por_nivel(0, 0) :- !.
 bonos_por_nivel(1, 8) :- !.
@@ -157,6 +164,15 @@ victoria_combate(Nombre, _Lugar, Recompensa) :-
     
     write('Has derrotado al '), write(Nombre), write('.'), nl,
     write('Encuentras '), write(Recompensa), write(' monedas. (Total: '), write(NuevoDinero), write(')'), nl,
+    forall(
+        drop_enemigo(Nombre, Objeto),
+        (   inventario(Inv),
+            retract(inventario(Inv)),
+            assert(inventario([Objeto|Inv])),
+            write('Has obtenido: '), write(Objeto), nl
+        )
+    ),
+
     write('El camino esta despejado.'), nl.
 
 % Escapar con Probabilidad (50% de exito)

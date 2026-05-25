@@ -7,7 +7,7 @@ conectado(mercado, plaza).
 conectado(plaza, castillo).
 conectado(entrada_mansion, plaza).
 conectado(plaza,entrada_mansion).
-
+conectado(plaza, entrada_neon).
     
 % Lugares Mansion.
 conectado(entrada_mansion, lobby).
@@ -23,6 +23,7 @@ conectado(sala, escaleras).
     
 % Lugares Barrio Mongrel.
 conectado(callejon, centro).
+conectado(centro, callejon).
 conectado(centro, callejon_norte).
 conectado(callejon_norte, centro).
 conectado(callejon_norte, casa_desgastada).
@@ -41,9 +42,17 @@ conectado(sotano, fondo).
 conectado(fondo, sotano).
 
 % Lugares Cuadrante Neon.
+conectado(entrada_neon, plaza).
+conectado(entrada_neon, pista_baile).
+conectado(pista_baile, entrada_neon).
+conectado(pista_baile, sala_dj).
+conectado(sala_dj, pista_baile).
+conectado(pista_baile, servidores).
+conectado(servidores, pista_baile).
+conectado(barra, pista_baile).
+conectado(pista_baile, barra).
 
-
-
+% Lugares castillo.
 
 
 

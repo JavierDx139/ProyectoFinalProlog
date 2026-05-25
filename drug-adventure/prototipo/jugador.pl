@@ -151,6 +151,7 @@ equipar(Objeto) :-
 equipar(_) :-
     write('No tienes ese objeto en tu inventario.'), nl.
 
+% Eventos de robos y perdidas.
 robos :-
     inventario(Inv),
     diinero(D),
@@ -171,3 +172,20 @@ robos :-
             write('y logras perdert rapidamente entre la gente.'), nl   
         )    
     ).
+
+    % Casos de robos.
+    % Caso 1: Robo de dinero:
+    ejecutar_robo(1) :-
+        dinero(D),
+        D > 0, !,
+        Perdida is min(D, 20),
+        NuevoDinero is D - Perdida,
+        retract(dinero(D)),
+        assert(dinero(NuevoDinero)),
+        write('Te bolsearon, te quitaron '), write(Perdida), write(' monedas de tu bolsa.'), nl,
+        write('Dinero actual: '), write(NuevoDinero), write(' monedas.'), nl.
+
+    % Si no es posible 1 haz 2.
+    ejecutar_robo(1) :-
+        ejecutar_robo(2).
+        

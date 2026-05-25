@@ -150,3 +150,11 @@ equipar(Objeto) :-
 
 equipar(_) :-
     write('No tienes ese objeto en tu inventario.'), nl.
+
+robos :-
+    inventario(Inv),
+    diinero(D),
+    ( (D =< 0, Inv == []) ->
+        write(' - Evento Al Azar - '), nl,
+        write(' Un individuo llega por detras, ve que no tienes nada y se retira'), nl,
+    ;)

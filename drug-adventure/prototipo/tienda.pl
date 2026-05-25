@@ -4,7 +4,7 @@ precio(pocion, 10).
 precio(espada, 30).
 precio(cocaso, 50).
 precio(joyas, 90).
-precio(hierba, 30).
+precio(hierba, 15).
 
 % Catalogo de precios de venta al mercader
 valor_venta(pocion, 5).
@@ -14,6 +14,7 @@ valor_venta(hierba, 7).
 valor_venta(cocaso, 25).
 valor_venta(joyas, 50).
 valor_venta(collar, 40).
+valor_venta(vino, 20).
 
 hablar_mercader :-
     estado_juego(exploracion),
@@ -63,7 +64,7 @@ comprar(Objeto) :-
 
 comprar(_) :-
     estado_juego(tienda),
-    write('Dealer: No tienes suficiente dinero o tus bolsillos estan llenos.'), nl, !.
+    write('Dealer: Este objeto no esta a la venta, no tienes suficiente dinero o tus bolsillos estan llenos.'), nl, !.
 
 % Funcion para vender
 vender(Objeto) :-

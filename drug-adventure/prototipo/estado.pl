@@ -23,7 +23,8 @@ enemigo(pandillero_fondo, fondo, 6, 6, 4, 5).
 enemigo(pandillero_viajado, distrito_verde, 6,6,3,3).
 enemigo(sicario_neon, pista_baile, 7,7,3,10).
 enemigo(hacker_neon, servidores, 15, 15, 4, 20).
-   
+enemigo(dj_sicario, sala_dj, 8,8,4,10).
+    
 % Objetos en el mapa
 objeto_en(callejon, pocion).
 objeto_en(lobby, vino).
@@ -33,6 +34,8 @@ objeto_en(esquina_sospechosa, lechuga).
 objeto_en(fondo, fragmento_llave_2).
 objeto_en(sala_dj, tarjeta_servidores).
 objeto_en(servidores, fragmento_llave_3).
+objeto_en(barra, pocion).
+
     
 % Puertas
 puerta_cerrada(castillo).

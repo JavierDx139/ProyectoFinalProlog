@@ -52,14 +52,8 @@ conectado(servidores, pista_baile).
 conectado(barra, pista_baile).
 conectado(pista_baile, barra).
 
-% Lugares castillo.
 
-
-
-
-
-    
-    
+       
     
 ir(_) :- 
     estado_juego(menu),
@@ -86,7 +80,7 @@ ir(servidores) :-
     assert(ubicacion(servidores)),
     retractall(ubicacion_anterior(_)),
     assert(ubicacion_anterior(Actual)),
-    write('Te has movido a: servidores'),  nl,
+    write('Te has movido a: servidores - Se ha usado la tarjeta_servidores'),  nl,
     mirar,
     revisar_victoria.
     
@@ -103,7 +97,7 @@ ir(castillo) :-
     assert(ubicacion(castillo)),
     retractall(ubicacion_anterior(_)),
     assert(ubicacion_anterior(Actual)),
-    write('Te has movido a: castillo'), nl,
+    write('Te has movido a: castillo - Se han usado los tres fragmentos de llave'), nl,
     mirar,
     revisar_victoria.
 
@@ -111,7 +105,7 @@ ir(Lugar) :-
     ubicacion(Actual),
     conectado(Actual, Lugar),
     puerta_cerrada(Lugar),
-    write('La puerta esta cerrada. Necesitas una llave para entrar.'), nl, !.
+    write('La puerta esta cerrada. Necesitas 3 fragmentos de llave para entrar.'), nl, !.
 
 % Movimiento exitoso
 ir(Lugar) :-

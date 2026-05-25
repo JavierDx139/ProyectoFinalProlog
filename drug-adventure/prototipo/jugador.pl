@@ -156,5 +156,18 @@ robos :-
     diinero(D),
     ( (D =< 0, Inv == []) ->
         write(' - Evento Al Azar - '), nl,
-        write(' Un individuo llega por detras, ve que no tienes nada y se retira'), nl,
-    ;)
+        write('Un individuo llega por detras, ve que no tienes nada y se retira'), nl
+    ;
+        random(1, 101, Probabilidad),
+        (Probabilidad =< 40 ->
+            write(' - Evento Al Azar - '), nl,
+            write('Fuiste emboscado, eres acorralado por dos individuos'), nl,
+
+            random(1, 3, TipoDeRobo),
+            ejecutar_robo(TipoDeRobo)
+        ;
+            write(' - Evento Al Azar - '), nl,
+            write('Te salvaste de un robo, pero alguien te sigue,') , nl,
+            write('y logras perdert rapidamente entre la gente.'), nl   
+        )    
+    ).

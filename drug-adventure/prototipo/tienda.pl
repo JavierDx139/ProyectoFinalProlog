@@ -2,11 +2,18 @@
 % Catalogo de objetos de la tienda.
 precio(pocion, 10).
 precio(espada, 30).
+precio(cocaso, 50).
+precio(joyas, 90).
+precio(hierba, 30).
 
 % Catalogo de precios de venta al mercader
 valor_venta(pocion, 5).
 valor_venta(espada, 15).
 valor_venta(llave, 1).
+valor_venta(hierba, 7).
+valor_venta(cocaso, 25).
+valor_venta(joyas, 50).
+valor_venta(collar, 40).
 
 hablar_mercader :-
     estado_juego(exploracion),

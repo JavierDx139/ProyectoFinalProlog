@@ -74,6 +74,38 @@ ir(_) :-
 ir(_) :-
     estado_juego(tienda),
     write('Estas viendo el catalogo del mercader. Usa "salir_tienda." antes de irte.'), nl, !.
+    
+ir(servidores) :-
+    ubicacion(Actual),
+    conectado(Actual, servidores),
+    inventario(Inv),
+    member(tarjeta_servidores, Inv),
+    puerta_cerrada(servidores),
+    retract(puerta_cerrada(servidores)),
+    retract(ubicacion(Actual)),
+    assert(ubicacion(servidores)),
+    retractall(ubicacion_anterior(_)),
+    assert(ubicacion_anterior(Actual)),
+    write('Te has movido a: servidores'),  nl,
+    mirar,
+    revisar_victoria.
+    
+ir(castillo) :-
+    ubicacion(Actual),
+    conectado(Actual, castillo),
+    inventario(Inv),
+    member(fragmento_llave_1, Inv),
+    member(fragmento_llave_2, Inv),
+    member(fragmento_llave_3, Inv),
+    puerta_cerrada(castillo),
+    retract(puerta_cerrada(castillo)),
+    retract(ubicacion(Actual)),
+    assert(ubicacion(castillo)),
+    retractall(ubicacion_anterior(_)),
+    assert(ubicacion_anterior(Actual)),
+    write('Te has movido a: castillo'), nl,
+    mirar,
+    revisar_victoria.
 
 ir(Lugar) :-
     ubicacion(Actual),

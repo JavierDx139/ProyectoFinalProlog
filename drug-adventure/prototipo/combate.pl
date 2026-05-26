@@ -90,24 +90,25 @@ iniciar_combate(Nombre) :-
 atacar :-
     estado_juego(exploracion),
     write('No estas en combate. No hay a quien atacar.'), nl, !.
-
+    
 atacar :-
     estado_juego(combate),
-    (postura_jugador(PJ, AJ) -> true ; (PJ=rapido, AJ=bloquear)),
+    write('¿Qué postura usaras? (rapido/lento): '), read(P),
+    write('¿Qué accion usaras? (esquivar/bloquear): '), read(A),
+    preparar_combate(P, A),
+    
     en_combate_con(Nombre),
     ubicacion(Lugar),
     enemigo(Nombre, Lugar, HP_E, Max_E, DmgBase_E, Recompensa),
-    
     jugador(_, _, NivelA, _),
     arma_equipada(Arma),
     
-    % Calculamos daño usando niveles
-    calcular_dano(Arma, NivelA, 0, PJ, AJ, Dmg_J),
+    calcular_dano(Arma, NivelA, 0, P, A, Dmg_J),
     
     (Dmg_J =:= 0 ->
-        NuevoHP_E = HP_E
+        write('¡Fallaste!'), nl, NuevoHP_E = HP_E
     ;
-        write('Golpe exitoso. Haces '), write(Dmg_J), write(' de daño total al '), write(Nombre), write('.'), nl,
+        write('¡Golpe exitoso! Hiciste '), write(Dmg_J), write(' de daño.'), nl,
         NuevoHP_E is HP_E - Dmg_J
     ),
     

@@ -15,17 +15,12 @@ arma(martillo, 55).
 arma(dobles_cuchillos, 75).
 arma(revolver_antiguo, 80).
 arma(tommygun, 65).
+
 % Incrementos de maximos por nivel
 bonos_por_nivel(0, 0) :- !.
 bonos_por_nivel(1, 8) :- !.
 bonos_por_nivel(2, 16) :- !.
 bonos_por_nivel(3, 25) :- !.
-
-% Minimos de defensa otorgados por el Escudo
-bono_escudo(0, 0) :- !. % cuando no hay escudo
-bono_escudo(1, 5) :- !.
-bono_escudo(2, 10) :- !.
-bono_escudo(_, 0).
 
 % Logica de posturas
 determinar_rangos_por_postura(
@@ -47,7 +42,7 @@ determinar_rangos_por_postura(
 % Calculo de dano
 
 % GOLPE FALLIDO
-calcular_dano(Arma, _, _, _, _, _, _, 0) :-
+calcular_dano(Arma, _, _, _, _, 0) :-
     arma(Arma, ProbAcierto),
     random(0, 101, DadoAcierto),
     DadoAcierto > ProbAcierto, !,
@@ -55,29 +50,27 @@ calcular_dano(Arma, _, _, _, _, _, _, 0) :-
     format('¡El ataque con ~w fallo! Probabilidad de fallar golpe: ~w%%~n', [Arma, ProbFallo]).
 
 % GOLPE EXITOSO
-calcular_dano(_Arma, NivelAtk, AmuletoFuego, NivelDef, NivelEscudo, PosturaAtk, PosturaDef, DanoFinal) :-
-
-    % LIMITES ATAQUE
-    (AmuletoFuego == 1 -> MinAtk is 15 ; MinAtk is 0),
+calcular_dano(_Arma, NivelAtk, NivelDef, PosturaAtk, PosturaDef, DanoFinal) :-
+    % Limites de ataque usando niveles
+    MinAtk is 0,
     bonos_por_nivel(NivelAtk, BonoAtk),
     MaxAtk is 75 + BonoAtk,
     PuntoMedioAtk is (MinAtk + MaxAtk) // 2,
 
-    % LIMITES DEFENSA
-    bono_escudo(NivelEscudo, MinDef),
+    % Limites de defensa usando niveles
     bonos_por_nivel(NivelDef, BonoMaxDef),
     MaxDef is 75 + BonoMaxDef,
-    PuntoMedioDef is (MinDef + MaxDef) // 2,
+    PuntoMedioDef is MaxDef // 2,
 
-    % DATOS DEL COMBATE COMPLETOS
+    % Calcular rangos segun posturas
     determinar_rangos_por_postura(
         PosturaAtk, PosturaDef, 
         MinAtk, MaxAtk, PuntoMedioAtk, 
-        MinDef, MaxDef, PuntoMedioDef,
+        0, MaxDef, PuntoMedioDef,
         RangoAtkMin, RangoAtkMax, 
         RangoDefMin, RangoDefMax),
 
-    % DAÑO Y MITIGACIÓN POR DEFENSA
+    % Calcular daño final
     random(RangoAtkMin, RangoAtkMax, ValorAtaque),
     random(RangoDefMin, RangoDefMax, ValorDefensaPorcentaje),
     Reduccion is (ValorAtaque * ValorDefensaPorcentaje) // 100,
@@ -100,18 +93,21 @@ atacar :-
 
 atacar :-
     estado_juego(combate),
+    (postura_jugador(PJ, AJ) -> true ; (PJ=rapido, AJ=bloquear)),
     en_combate_con(Nombre),
     ubicacion(Lugar),
     enemigo(Nombre, Lugar, HP_E, Max_E, DmgBase_E, Recompensa),
     
-    % Obtenemos el arma equipada, si no hay, usa 'ninguna'.
+    jugador(_, _, NivelA, _),
     arma_equipada(Arma),
-    calcular_dano(Arma, 1, 0, 1, 0, rapido, bloquear, Dmg_J),
+    
+    % Calculamos daño usando niveles
+    calcular_dano(Arma, NivelA, 0, PJ, AJ, Dmg_J),
     
     (Dmg_J =:= 0 ->
-        NuevoHP_E is HP_E % Falla el golpe
+        NuevoHP_E = HP_E
     ;
-        write('Golpe exitoso. Haces '), write(Dmg_J), write(' de dano total al '), write(Nombre), write('.'), nl,
+        write('Golpe exitoso. Haces '), write(Dmg_J), write(' de daño total al '), write(Nombre), write('.'), nl,
         NuevoHP_E is HP_E - Dmg_J
     ),
     
@@ -119,35 +115,33 @@ atacar :-
     (NuevoHP_E =< 0 ->
         victoria_combate(Nombre, Lugar, Recompensa)
     ;
-        % Guardamos los datos actualizados
         assert(enemigo(Nombre, Lugar, NuevoHP_E, Max_E, DmgBase_E, Recompensa)),
         turno_enemigo(Nombre, Lugar)
-    ).
+    ), !.
 
 % Turno enemigo
 turno_enemigo(Nombre, Lugar) :-
-    enemigo(Nombre, Lugar, HP_E, Max_E, _DmgBase_E, _),
+    enemigo(Nombre, Lugar, HP_E, Max_E, DmgBase_E, _),
     write('El '), write(Nombre), write(' tiene '), write(HP_E), write('/'), write(Max_E), write(' HP.'), nl,
     
-    % El enemigo ataca usando el mismo sistema, asumiendo arma 'espada' y postura 'lento'
-    calcular_dano(espada, 1, 0, 1, 0, lento, esquivar, Dmg_E),
+    % Enemigo ataca con valores base
+    calcular_dano(espada, 1, 0, lento, esquivar, Dmg_E),
+    
+    jugador(HP_J, Max_J, NivelA, NivelD),
+    Dmg_Reducido is max(0, Dmg_E - (NivelD * 2)),
     
     (Dmg_E =:= 0 ->
-        write('El '), write(Nombre), write(' fallo su ataque.'), nl,
-        DanoFinal_E is 0
+        write('El '), write(Nombre), write(' fallo su ataque.'), nl
     ;
-        write('El '), write(Nombre), write(' te impacta haciendo '), write(Dmg_E), write(' de dano.'), nl,
-        DanoFinal_E is Dmg_E
+        write('El '), write(Nombre), write(' te impacta haciendo '), write(Dmg_Reducido), write(' de daño.'), nl
     ),
     
-    jugador(HP_J, Max_J, Dmg_Base_J),
-    NuevoHP_J is HP_J - DanoFinal_E,
-    
+    NuevoHP_J is HP_J - Dmg_Reducido,
     (NuevoHP_J =< 0 ->
         write('HAS MUERTO. Fin del juego.'), nl, halt
     ;
-        retract(jugador(_, _, _)),
-        assert(jugador(NuevoHP_J, Max_J, Dmg_Base_J)),
+        retract(jugador(_, _, _, _)),
+        assert(jugador(NuevoHP_J, Max_J, NivelA, NivelD)),
         write('Te quedan '), write(NuevoHP_J), write('/'), write(Max_J), write(' HP.'), nl, nl
     ).
 

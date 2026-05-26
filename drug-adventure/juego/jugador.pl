@@ -78,7 +78,11 @@ tirar(_) :-
 % efecto_consumible(NombreObjeto, TipoEfecto, Valor)
 efecto_consumible(pocion, curar, 15).
 efecto_consumible(manzana, curar, 5).
+efecto_consumible(vino, curar, 10).
+efecto_consumible(hierba, curar, 20).
+efecto_consumible(cocaso, curar, 50).
 
+    
 usar(Objeto) :-
     inventario(Inv),
     member(Objeto, Inv),
@@ -115,18 +119,21 @@ usar(_) :-
 
 % Logica de efectos
 aplicar_efecto(curar, Valor) :-
-    jugador(HP_J, Max_J, Dmg_J),
-    % min() asegura que nunca tengamos mas vida que la Maxima
+    jugador(HP_J, Max_J, NivelA, NivelD),
     NuevoHP is min(HP_J + Valor, Max_J),
-    retract(jugador(_, _, _)),
-    assert(jugador(NuevoHP, Max_J, Dmg_J)),
+    retract(jugador(_, _, _, _)),
+    assert(jugador(NuevoHP, Max_J, NivelA, NivelD)),
     write('Has recuperado salud. Tu HP ahora es '), write(NuevoHP), write('/'), write(Max_J), nl.
 
 % Catalogo de armas
 % dano_arma(Nombre, BonusDeDano)
 dano_arma(espada, 10).
 dano_arma(ninguna, 0).
-
+dano_arma(revolver_antiguo, 12).
+dano_arma(tommygun, 20).    
+dano_arma(lanza, 13).
+dano_arma(martillo, 18).
+dano_arma(dobles_cuchillos, 8).
 % Reglas para equipar un objeto.
 equipar(_) :-
     estado_juego(combate),
@@ -156,55 +163,62 @@ robos :-
     inventario(Inv),
     dinero(D),
     ( (D =< 0, Inv == []) ->
-        write(' - Evento Al Azar - '), nl,
-        write('Un individuo llega por detras, ve que no tienes nada y se retira'), nl
+        % Si el jugador no tiene nada, el evento pasa en silencio para no saturar de texto.
+        true
     ;
         random(1, 101, Probabilidad),
-        (Probabilidad =< 40 ->
+        (Probabilidad =< 10 ->
             write(' - Evento Al Azar - '), nl,
             write('Fuiste emboscado, eres acorralado por dos individuos'), nl,
 
             random(1, 3, TipoDeRobo),
             ejecutar_robo(TipoDeRobo)
         ;
-            write(' - Evento Al Azar - '), nl,
-            write('Te salvaste de un robo, pero alguien te sigue,') , nl,
-            write('y logras perderte rapidamente entre la gente.'), nl   
+            % El 90% de las veces que no ocurre, el juego sigue limpio.
+            true
         )    
     ).
 
-    % Casos de robos.
-    % Caso 1: Robo de dinero.
-    ejecutar_robo(1) :-
-        dinero(D),
-        D > 0, !,
-        Perdida is min(D, 20),
-        NuevoDinero is D - Perdida,
-        retract(dinero(D)),
-        assert(dinero(NuevoDinero)),
-        write('Te bolsearon, te quitaron '), write(Perdida), write(' monedas de tu bolsa.'), nl,
-        write('Dinero actual: '), write(NuevoDinero), write(' monedas.'), nl.
+% Casos de robos.
+% Caso 1: Robo de dinero.
+ejecutar_robo(1) :-
+    dinero(D),
+    D > 0, !,
+    Perdida is min(D, 20),
+    NuevoDinero is D - Perdida,
+    retract(dinero(D)),
+    assert(dinero(NuevoDinero)),
+    write('Te bolsearon, te quitaron '), write(Perdida), write(' monedas de tu bolsa.'), nl,
+    write('Dinero actual: '), write(NuevoDinero), write(' monedas.'), nl.
 
-    % Si no es posible 1 haz 2.
-    ejecutar_robo(1) :-
-        ejecutar_robo(2).
-        
-    % Caso 2: Robo de objetos.
-    ejecutar_robo(2) :-
-        inventario(Inv),
-        Inv \== [], !,
+% Si no es posible 1 haz 2.
+ejecutar_robo(1) :-
+    ejecutar_robo(2).
+    
+% Caso 2: Robo de objetos.
+ejecutar_robo(2) :-
+    inventario(Inv),
+    Inv \== [], !,
 
-        random_member(ObjetoRobado, Inv),
+    random_member(ObjetoRobado, Inv),
 
-        select(ObjetoRobado, Inv, NuevoInv),
-        retract(inventario(Inv)),
-        assert(inventario(NuevoInv)),
+    select(ObjetoRobado, Inv, NuevoInv),
+    retract(inventario(Inv)),
+    assert(inventario(NuevoInv)),
+    
+    % Desequipar arma si es la que se robaron
+    ( arma_equipada(ObjetoRobado) ->
+        retract(arma_equipada(ObjetoRobado)),
+        assert(arma_equipada(ninguna)),
+        write('!!! Te han arrebatado tu '), write(ObjetoRobado), write(' de las manos.'), nl
+    ; 
+        true 
+    ),
 
-        write('Te apuntan con un arma y revisan tu mochila y te roban tu: '),
-        write(ObjetoRobado), write('.'), nl,
-        write('Ya no esta disponible ese objeto en el inventario'), nl.
+    write('Te apuntan con un arma, revisan tu mochila y te roban tu: '),
+    write(ObjetoRobado), write('.'), nl,
+    write('Ya no esta disponible ese objeto en el inventario.'), nl.
 
-    %Si no es posible 2 haz 1.
-
-    ejecutar_robo(2) :-
-        ejecutar_robo(1).
+% Si no es posible 2 haz 1.
+ejecutar_robo(2) :-
+    ejecutar_robo(1).

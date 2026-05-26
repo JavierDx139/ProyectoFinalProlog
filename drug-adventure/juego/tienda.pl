@@ -23,7 +23,7 @@ hablar_mercader :-
     assert(estado_juego(tienda)),
     write('--- TIENDA ---'), nl,
     write('Dealer: Echa un vistazo a mis mercancias.'), nl,
-    write('Usa "catalogo." para ver que vendo, "comprar(Objeto)." o "salir_tienda." para irte.'), nl, !.
+    write('Usa "catalogo." para ver que vendo, "comprar(Objeto).", "mejorar(ataque)", "mejorar(salud)" o "salir_tienda." para irte.'), nl, !.
 
 hablar_mercader :-
     write('No hay ningun mercader aqui.'), nl.
@@ -62,9 +62,34 @@ comprar(Objeto) :-
     assert(inventario([Objeto|Inv])),
     write('Dealer: Aqui tienes tu '), write(Objeto), write('.'), nl, !.
 
+
 comprar(_) :-
     estado_juego(tienda),
     write('Dealer: Este objeto no esta a la venta, no tienes suficiente dinero o tus bolsillos estan llenos.'), nl, !.
+
+% Comandos de progreso en tienda
+mejorar(ataque) :-
+    estado_juego(tienda),
+    dinero(D), D >= 50, !, 
+    jugador(HP, Max, NivelA, NivelD),
+    NuevoNivelA is NivelA + 1,
+    retract(jugador(_, _, _, _)),
+    assert(jugador(HP, Max, NuevoNivelA, NivelD)),
+    retract(dinero(D)), assert(dinero(D - 50)),
+    write('Has subido tu nivel de ataque.'), nl.
+
+mejorar(vida) :-
+    estado_juego(tienda),
+    dinero(D), D >= 50, !, 
+    jugador(HP, Max, NivelA, NivelD),
+    NuevoMax is Max + 10,
+    retract(jugador(_, _, _, _)),
+    assert(jugador(HP, NuevoMax, NivelA, NivelD)),
+    retract(dinero(D)), assert(dinero(D - 50)),
+    write('Has subido tu vida maxima.'), nl.
+    
+mejorar(_) :-
+    write('Dealer: No tienes suficiente dinero o no se puede mejorar eso.'), nl.
 
 % Funcion para vender
 vender(Objeto) :-

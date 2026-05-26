@@ -157,3 +157,68 @@ equipar(Objeto) :-
 
 equipar(_) :-
     write('No tienes ese objeto en tu inventario.'), nl.
+
+% Eventos de robos y perdidas.
+robos :-
+    inventario(Inv),
+    dinero(D),
+    ( (D =< 0, Inv == []) ->
+        % Si el jugador no tiene nada, el evento pasa en silencio para no saturar de texto.
+        true
+    ;
+        random(1, 101, Probabilidad),
+        (Probabilidad =< 10 ->
+            write(' - Evento Al Azar - '), nl,
+            write('Fuiste emboscado, eres acorralado por dos individuos'), nl,
+
+            random(1, 3, TipoDeRobo),
+            ejecutar_robo(TipoDeRobo)
+        ;
+            % El 90% de las veces que no ocurre, el juego sigue limpio.
+            true
+        )    
+    ).
+
+% Casos de robos.
+% Caso 1: Robo de dinero.
+ejecutar_robo(1) :-
+    dinero(D),
+    D > 0, !,
+    Perdida is min(D, 20),
+    NuevoDinero is D - Perdida,
+    retract(dinero(D)),
+    assert(dinero(NuevoDinero)),
+    write('Te bolsearon, te quitaron '), write(Perdida), write(' monedas de tu bolsa.'), nl,
+    write('Dinero actual: '), write(NuevoDinero), write(' monedas.'), nl.
+
+% Si no es posible 1 haz 2.
+ejecutar_robo(1) :-
+    ejecutar_robo(2).
+    
+% Caso 2: Robo de objetos.
+ejecutar_robo(2) :-
+    inventario(Inv),
+    Inv \== [], !,
+
+    random_member(ObjetoRobado, Inv),
+
+    select(ObjetoRobado, Inv, NuevoInv),
+    retract(inventario(Inv)),
+    assert(inventario(NuevoInv)),
+    
+    % Desequipar arma si es la que se robaron
+    ( arma_equipada(ObjetoRobado) ->
+        retract(arma_equipada(ObjetoRobado)),
+        assert(arma_equipada(ninguna)),
+        write('!!! Te han arrebatado tu '), write(ObjetoRobado), write(' de las manos.'), nl
+    ; 
+        true 
+    ),
+
+    write('Te apuntan con un arma, revisan tu mochila y te roban tu: '),
+    write(ObjetoRobado), write('.'), nl,
+    write('Ya no esta disponible ese objeto en el inventario.'), nl.
+
+% Si no es posible 2 haz 1.
+ejecutar_robo(2) :-
+    ejecutar_robo(1).

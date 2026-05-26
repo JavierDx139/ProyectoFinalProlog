@@ -129,6 +129,7 @@ ir(Lugar) :-
     retractall(ubicacion_anterior(_)),
     assert(ubicacion_anterior(Actual)),
     write('Te has movido a: '), write(Lugar), nl,
+    robos,
     mirar,
     revisar_victoria.
 

@@ -61,6 +61,11 @@ comprar(Objeto) :-
     assert(inventario([Objeto|Inv])),
     write('Dealer: Aqui tienes tu '), write(Objeto), write('.'), nl, !.
 
+
+comprar(_) :-
+    estado_juego(tienda),
+    write('Dealer: No tienes suficiente dinero o tus bolsillos estan llenos.'), nl, !.
+
 % Comandos de progreso en tienda
 mejorar(ataque) :-
     estado_juego(tienda),
@@ -84,10 +89,6 @@ mejorar(vida) :-
     
 mejorar(_) :-
     write('Dealer: No tienes suficiente dinero o no se puede mejorar eso.'), nl.
-
-comprar(_) :-
-    estado_juego(tienda),
-    write('Dealer: No tienes suficiente dinero o tus bolsillos estan llenos.'), nl, !.
 
 % Funcion para vender
 vender(Objeto) :-

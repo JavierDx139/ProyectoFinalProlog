@@ -121,7 +121,7 @@ atacar :-
 
 % Turno enemigo
 turno_enemigo(Nombre, Lugar) :-
-    enemigo(Nombre, Lugar, HP_E, Max_E, DmgBase_E, _),
+    enemigo(Nombre, Lugar, HP_E, Max_E, _DmgBase_E, _),
     write('El '), write(Nombre), write(' tiene '), write(HP_E), write('/'), write(Max_E), write(' HP.'), nl,
     
     % Enemigo ataca con valores base

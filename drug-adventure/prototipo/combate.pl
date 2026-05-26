@@ -89,7 +89,7 @@ iniciar_combate(Nombre) :-
 preparar_combate(P, A) :-
     retractall(postura_jugador(_, _)),
     assert(postura_jugador(P, A)),
-    write('Has adoptado la postura: '), write(P), write(' y accion: '), write(A), nl.
+    write('Has adoptado la postura para atacar: '), write(P), write(' y postura para defender: '), write(A), nl.
 
 % Reglas de ataque
 atacar :-
@@ -98,8 +98,8 @@ atacar :-
     
 atacar :-
     estado_juego(combate),
-    write('¿Qué postura usaras? (rapido/lento): '), read(P),
-    write('¿Qué accion usaras? (esquivar/bloquear): '), read(A),
+    write('¿Qué postura para atacar usaras? (rapido/lento): '), read(P),
+    write('¿Qué postura para defender usaras? (esquivar/bloquear): '), read(A),
     preparar_combate(P, A),
     
     en_combate_con(Nombre),

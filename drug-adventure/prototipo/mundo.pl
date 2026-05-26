@@ -150,7 +150,7 @@ mirar :-
     write('---------------------------------------'), nl,
     
     % Mostrar Estadisticas del Jugador
-    jugador(HP_J, Max_J, _Dmg_J),
+    jugador(HP_J, Max_J, _Dmg_J, _, _),
     dinero(D),
     write('Estadisticas => Salud: '), write(HP_J), write('/'), write(Max_J), write(' | Dinero: '), write(D), write(' monedas'), nl,
     write('---------------------------------------'), nl,

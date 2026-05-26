@@ -119,11 +119,10 @@ usar(_) :-
 
 % Logica de efectos
 aplicar_efecto(curar, Valor) :-
-    jugador(HP_J, Max_J, Dmg_J),
-    % min() asegura que nunca tengamos mas vida que la Maxima
+    jugador(HP_J, Max_J, NivelA, NivelD),
     NuevoHP is min(HP_J + Valor, Max_J),
-    retract(jugador(_, _, _)),
-    assert(jugador(NuevoHP, Max_J, Dmg_J)),
+    retract(jugador(_, _, _, _)),
+    assert(jugador(NuevoHP, Max_J, NivelA, NivelD)),
     write('Has recuperado salud. Tu HP ahora es '), write(NuevoHP), write('/'), write(Max_J), nl.
 
 % Catalogo de armas

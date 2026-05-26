@@ -129,19 +129,19 @@ atacar :-
 turno_enemigo(Nombre, Lugar) :-
     enemigo(Nombre, Lugar, HP_E, Max_E, _DmgBase_E, _),
     write('El '), write(Nombre), write(' tiene '), write(HP_E), write('/'), write(Max_E), write(' HP.'), nl,
-    
-    % Enemigo ataca con valores base
-    calcular_dano(espada, 1, 0, lento, esquivar, Dmg_E),
-    
+    ListaPosturas = [rapido, lento],
+    ListaAcciones = [esquivar, bloquear],
+    random_member(PosturaE, ListaPosturas),
+    random_member(AccionE, ListaAcciones),
+    write('El '), write(Nombre), write(' adopta postura '), write(PosturaE), write(' y '), write(AccionE), write('.'), nl,
+    calcular_dano(espada, 1, 0, PosturaE, AccionE, Dmg_E),
     jugador(HP_J, Max_J, NivelA, NivelD),
     Dmg_Reducido is max(0, Dmg_E - (NivelD * 2)),
-    
     (Dmg_E =:= 0 ->
         write('El '), write(Nombre), write(' fallo su ataque.'), nl
     ;
         write('El '), write(Nombre), write(' te impacta haciendo '), write(Dmg_Reducido), write(' de daño.'), nl
     ),
-    
     NuevoHP_J is HP_J - Dmg_Reducido,
     (NuevoHP_J =< 0 ->
         write('HAS MUERTO. Fin del juego.'), nl, halt

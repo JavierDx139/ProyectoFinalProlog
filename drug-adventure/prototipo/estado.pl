@@ -1,5 +1,5 @@
 % Declaramos las cosas que cambian en el juego, y como empezamos.
-:- dynamic ubicacion/1, ubicacion_anterior/1, estado_juego/1, en_combate_con/1, inventario/1, objeto_en/2, puerta_cerrada/1, jugador/3, enemigo/6, dinero/1, arma_equipada/1.
+:- dynamic ubicacion/1, ubicacion_anterior/1, estado_juego/1, en_combate_con/1, inventario/1, objeto_en/2, puerta_cerrada/1, jugador/4, enemigo/6, dinero/1, arma_equipada/1, postura_jugador/2.
 
 % Estados iniciales
 estado_juego(menu).
@@ -9,8 +9,9 @@ inventario([]).
 dinero(30).
 arma_equipada(ninguna).
 
-% jugador(HP_Actual, HP_Max, Dmg)
-jugador(30, 30, 5).
+% jugador(HP, Max, NivelA, NivelD)
+jugador(30, 30, 1, 0).
+arma_equipada(ninguna).
 
 % enemigo(Nombre, Ubicacion, HP_Actual, HP_Total, Dmg, Recompensa)
 enemigo(ladron, callejon, 5 ,  5, 2, 10).

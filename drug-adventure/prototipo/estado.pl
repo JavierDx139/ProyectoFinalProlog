@@ -7,7 +7,6 @@ ubicacion(plaza).
 ubicacion_anterior(plaza). % Para no romper el juego si intentas escapar en el turno 1
 inventario([]).
 dinero(30).
-arma_equipada(ninguna).
 
 % jugador(HP, Max, NivelA, NivelD)
 jugador(30, 30, 1, 0).

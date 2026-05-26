@@ -64,7 +64,7 @@ comprar(Objeto) :-
 % Comandos de progreso en tienda
 mejorar(ataque) :-
     estado_juego(tienda),
-    dinero(D), D >= 50,
+    dinero(D), D >= 50, !, 
     jugador(HP, Max, NivelA, NivelD),
     NuevoNivelA is NivelA + 1,
     retract(jugador(_, _, _, _)),
@@ -74,13 +74,16 @@ mejorar(ataque) :-
 
 mejorar(vida) :-
     estado_juego(tienda),
-    dinero(D), D >= 50,
+    dinero(D), D >= 50, !, 
     jugador(HP, Max, NivelA, NivelD),
     NuevoMax is Max + 10,
     retract(jugador(_, _, _, _)),
     assert(jugador(HP, NuevoMax, NivelA, NivelD)),
     retract(dinero(D)), assert(dinero(D - 50)),
     write('Has subido tu vida maxima.'), nl.
+    
+mejorar(_) :-
+    write('Dealer: No tienes suficiente dinero o no se puede mejorar eso.'), nl.
 
 comprar(_) :-
     estado_juego(tienda),

@@ -86,6 +86,11 @@ iniciar_combate(Nombre) :-
     assert(en_combate_con(Nombre)),
     write('Has comenzado una pelea.'), nl.
 
+preparar_combate(P, A) :-
+    retractall(postura_jugador(_, _)),
+    assert(postura_jugador(P, A)),
+    write('Has adoptado la postura: '), write(P), write(' y accion: '), write(A), nl.
+
 % Reglas de ataque
 atacar :-
     estado_juego(exploracion),
@@ -106,9 +111,9 @@ atacar :-
     calcular_dano(Arma, NivelA, 0, P, A, Dmg_J),
     
     (Dmg_J =:= 0 ->
-        write('¡Fallaste!'), nl, NuevoHP_E = HP_E
+        write('Fallaste'), nl, NuevoHP_E = HP_E
     ;
-        write('¡Golpe exitoso! Hiciste '), write(Dmg_J), write(' de daño.'), nl,
+        write('Golpe exitoso. Hiciste '), write(Dmg_J), write(' de daño.'), nl,
         NuevoHP_E is HP_E - Dmg_J
     ),
     
